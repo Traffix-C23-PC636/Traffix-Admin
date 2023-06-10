@@ -1,0 +1,21 @@
+runtime: nodejs14
+
+instance_class: F1
+
+automatic_scaling:
+  min_instances: 1
+  max_instances: 10
+
+handlers:
+  - url: /_next/static
+    static_dir: ./.next/static
+    secure: always
+
+  - url: /(.*\.(js|css|png|jpg|jpeg|gif|ico|json))
+    static_files: ./.next/\1
+    upload: ./.next/.*\.(js|css|png|jpg|jpeg|gif|ico|json)
+    secure: always
+
+  - url: /.*
+    script: auto
+    secure: always
