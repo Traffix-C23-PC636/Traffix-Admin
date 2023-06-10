@@ -35,8 +35,6 @@ function Page() {
     const [isMonitoringAtcs, setIsMonitoringAtcs] = useState('true')
 
 
-
-
     const { data: session, status } = useSession()
 
     if (status === "unauthenticated") {
@@ -174,7 +172,7 @@ function Page() {
                                                     <Select onChange={event => setIdKotaAtcs(event)}  aria-required={true}>
                                                         {
                                                             dataKota.map((item) => (
-                                                                <SelectItem value={item['id_kota']} >
+                                                                <SelectItem key={item['id_kota']} value={item['id_kota']} >
                                                                     {item['nama_kota']}
                                                                 </SelectItem>
                                                             ))
