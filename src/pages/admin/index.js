@@ -1,5 +1,4 @@
-import{useEffect, Fragment} from "react";
-import { useRouter } from "next/navigation";
+import {useEffect, Fragment, useContext} from "react";
 import {
     Card,
     Title,
@@ -16,30 +15,33 @@ import {useState} from "react";
 import axios from "axios";
 import { Dialog,Transition } from '@headlessui/react'
 import Layout from "@/components/Layout";
-import Image from "next/image";
-import {useSession} from "next-auth/react";
 import Head from "next/head";
 import {toast} from "react-toastify";
+import {SessionContext} from "@/context/SessionProvider";
 
 
 function Page() {
-    const router = useRouter()
     const [dataKota, setDataKota] = useState([])
     let [isOpen, setIsOpen] = useState(false)
     const [idKota, setIdKota] = useState('')
     const [namaKota, setNamaKota] = useState('')
     const [provinsi, setProvinsi] = useState('')
 
+    const user = useContext(SessionContext);
 
-    const { data: session, status } = useSession();
+
 
     useEffect(() => {
         fetchData();
-    }, [router])
+    }, [])
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('https://api.traffix.my.id/api/admin/kota');
+            const response = await axios.get('https://api.traffix.my.id/api/admin/kota',{
+                headers:{
+                    authorization: 'Bearer ' + user.accessToken,
+                }
+            });
             setDataKota(response.data['kota']);
         } catch (error) {
             toast.error("Gagal Fetch Data", {
@@ -61,6 +63,10 @@ function Page() {
                 id_kota : idKota,
                 nama_kota : namaKota,
                 provinsi : provinsi
+            },{
+                headers:{
+                    authorization: 'Bearer ' + user.accessToken,
+                }
             }).then(r =>{
                 toast.success("Sukses Simpan Data", {
                     position: "top-right",
@@ -90,6 +96,30 @@ function Page() {
         }
     }
 
+    const deleteData = async (e) => {
+        try {
+            await axios.delete('https://api.traffix.my.id/api/admin/atcs/' + e,{
+                headers:{
+                    authorization: 'Bearer ' + user.accessToken,
+                }
+            })
+            toast.success("Sukses Hapus Data", {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        } catch (e) {
+
+        } finally {
+            fetchData()
+        }
+    }
+
     function closeModal() {
         setIsOpen(false)
     }
@@ -105,8 +135,7 @@ function Page() {
             <Head>
                 <title>Dashboard | Kota</title>
             </Head>
-            {
-                (dataKota !== []) ?<Layout>
+            <Layout>
                     <main className="p-4 md:p-10 mx-auto max-w-7xl">
                         <Transition appear show={isOpen} as={Fragment}>
                             <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -194,7 +223,9 @@ function Page() {
                                                     <Text>{item['provinsi']}</Text>
                                                 </TableCell>
                                                 <TableCell>
-                                                    <button >
+                                                    <button onClick={async () => {
+                                                        await deleteData(item['id_kota'])
+                                                    }}>
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                                                         </svg>
@@ -207,13 +238,7 @@ function Page() {
                             </Card>
                         </Card>
                     </main>
-                </Layout> : <div className="w-full flex flex-col justify-center items-center h-screen">
-                    <Image width={80} height={80} src={'/loader.gif'}  alt={'Loading'}/>
-                    <span className="text-green-500">
-                    Loading
-                </span>
-                </div>
-            }
+                </Layout>
         </>
     );
 }

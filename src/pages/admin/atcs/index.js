@@ -1,5 +1,4 @@
-import{useEffect, Fragment} from "react";
-import { useRouter } from "next/navigation";
+import {useEffect, Fragment, useContext} from "react";
 import {
     Card,
     Title,
@@ -16,16 +15,14 @@ import {useState} from "react";
 import axios from "axios";
 import { Dialog,Transition } from '@headlessui/react'
 import Layout from "@/components/Layout";
-import Image from "next/image";
-import {useSession} from "next-auth/react";
 import Head from "next/head";
 import {toast} from "react-toastify";
+import {SessionContext} from "@/context/SessionProvider";
 
 
 function Page() {
-    const router = useRouter()
-    const [dataAtcs, setDataAtcs] = useState(null)
-    const [dataKota, setDataKota] = useState(null)
+    const [dataAtcs, setDataAtcs] = useState([])
+    const [dataKota, setDataKota] = useState([])
     let [isOpen, setIsOpen] = useState(false)
     const [namaAtcs, setNamaAtcs] = useState('')
     const [latAtcs, setLatAtcs] = useState('')
@@ -34,22 +31,26 @@ function Page() {
     const [streamAtcs, setStreamAtcs] = useState('')
     const [isMonitoringAtcs, setIsMonitoringAtcs] = useState('true')
 
+    const user = useContext(SessionContext);
 
-    const { data: session, status } = useSession()
-
-    if (status === "unauthenticated") {
-        router.replace('/')
-    }
 
     useEffect(() => {
         fetchData();
-    }, [router])
+    }, [])
 
     const fetchData = async () => {
         try {
-            const kota = await axios.get('https://api.traffix.my.id/api/admin/kota');
+            const kota = await axios.get('https://api.traffix.my.id/api/admin/kota',{
+                headers:{
+                    authorization: 'Bearer ' + user.accessToken,
+                }
+            });
             setDataKota(kota.data['kota']);
-            const atcs = await axios.get('https://api.traffix.my.id/api/admin/atcs');
+            const atcs = await axios.get('https://api.traffix.my.id/api/admin/atcs',{
+                headers:{
+                    authorization: 'Bearer ' + user.accessToken,
+                }
+            });
             setDataAtcs(atcs.data['atcs']);
         } catch (error) {
             toast.error("Gagal Fetch Data", {
@@ -74,6 +75,10 @@ function Page() {
                 kota_id: parseInt(idKotaAtcs),
                 stream_url: streamAtcs,
                 is_monitoring : isMonitoringAtcs
+            },{
+                headers:{
+                    authorization: 'Bearer ' + user.accessToken,
+                }
             }).then(r => {
                 toast.success("Sukses Simpan Data", {
                     position: "top-right",
@@ -105,7 +110,21 @@ function Page() {
 
     const deleteData = async (e) => {
         try {
-            await axios.delete('https://api.traffix.my.id/api/admin/atcs/' + e)
+            await axios.delete('https://api.traffix.my.id/api/admin/atcs/' + e,{
+                headers:{
+                    authorization: 'Bearer ' + user.accessToken,
+                }
+            })
+            toast.success("Sukses Hapus Data", {
+                position: "top-right",
+                autoClose: 2000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
         } catch (e) {
 
         } finally {
@@ -128,8 +147,7 @@ function Page() {
             <Head>
                 <title>Dashboard | Data ATCS</title>
             </Head>
-            {
-                (dataAtcs) ?<Layout>
+            <Layout>
                     <main className="p-4 md:p-10 mx-auto max-w-7xl">
                         <Transition appear show={isOpen} as={Fragment}>
                             <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -275,13 +293,7 @@ function Page() {
                             </Card>
                         </Card>
                     </main>
-                </Layout> : <div className="w-full flex flex-col justify-center items-center h-screen">
-                    <Image width={80} height={80} src={'/loader.gif'}  alt={'Loading'}/>
-                    <span className="text-green-500">
-                    Loading
-                </span>
-                </div>
-            }
+                </Layout>
         </>
     );
 }

@@ -2,20 +2,20 @@ import '@/styles/globals.css';
 import "firebase/compat/auth";
 import 'react-toastify/dist/ReactToastify.css';
 import {ToastContainer} from "react-toastify";
-import {SessionProvider} from "next-auth/react";
+import SessionsProvider from "@/context/SessionProvider"
 
 
-export default function App({ Component, pageProps: { session, ...pageProps }}) {
+export default function App({ Component, pageProps: { ...pageProps }}) {
   return (
       <>
-          <SessionProvider session={session}>
+          <SessionsProvider>
               <ToastContainer />
               {
                   <Component
                       {...pageProps}
                   />
               }
-          </SessionProvider>
+          </SessionsProvider>
       </>
   );
 }
