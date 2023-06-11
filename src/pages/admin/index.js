@@ -98,7 +98,7 @@ function Page() {
 
     const deleteData = async (e) => {
         try {
-            await axios.delete('https://api.traffix.my.id/api/admin/atcs/' + e,{
+            await axios.delete('https://api.traffix.my.id/api/admin/kota/' + e,{
                 headers:{
                     authorization: 'Bearer ' + user.accessToken,
                 }
