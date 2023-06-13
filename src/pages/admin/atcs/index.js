@@ -40,13 +40,13 @@ function Page() {
 
     const fetchData = async () => {
         try {
-            const kota = await axios.get('https://api.traffix.my.id/api/admin/kota',{
+            const kota = await axios.get('https://traffix-prod-jiiwmdjwva-as.a.run.app//api/admin/kota',{
                 headers:{
                     authorization: 'Bearer ' + user.accessToken,
                 }
             });
             setDataKota(kota.data['kota']);
-            const atcs = await axios.get('https://api.traffix.my.id/api/admin/atcs',{
+            const atcs = await axios.get('https://traffix-prod-jiiwmdjwva-as.a.run.app//api/admin/atcs',{
                 headers:{
                     authorization: 'Bearer ' + user.accessToken,
                 }
@@ -68,7 +68,7 @@ function Page() {
 
     const submitData = async () => {
         try {
-            await axios.post('https://api.traffix.my.id/api/admin/atcs',{
+            await axios.post('https://traffix-prod-jiiwmdjwva-as.a.run.app//api/admin/atcs',{
                 nama_atcs : namaAtcs,
                 lat : latAtcs,
                 long : longAtcs,
@@ -110,7 +110,7 @@ function Page() {
 
     const deleteData = async (e) => {
         try {
-            await axios.delete('https://api.traffix.my.id/api/admin/atcs/' + e,{
+            await axios.delete('https://traffix-prod-jiiwmdjwva-as.a.run.app//api/admin/atcs/' + e,{
                 headers:{
                     authorization: 'Bearer ' + user.accessToken,
                 }

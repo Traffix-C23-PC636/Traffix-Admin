@@ -37,7 +37,7 @@ function Page() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get('https://api.traffix.my.id/api/admin/kota',{
+            const response = await axios.get('https://traffix-prod-jiiwmdjwva-as.a.run.app//api/admin/kota',{
                 headers:{
                     authorization: 'Bearer ' + user.accessToken,
                 }
@@ -59,7 +59,7 @@ function Page() {
 
     const submitData = async () => {
         try {
-            await axios.post('https://api.traffix.my.id/api/admin/kota',{
+            await axios.post('https://traffix-prod-jiiwmdjwva-as.a.run.app//api/admin/kota',{
                 id_kota : idKota,
                 nama_kota : namaKota,
                 provinsi : provinsi
@@ -98,7 +98,7 @@ function Page() {
 
     const deleteData = async (e) => {
         try {
-            await axios.delete('https://api.traffix.my.id/api/admin/kota/' + e,{
+            await axios.delete('https://traffix-prod-jiiwmdjwva-as.a.run.app//api/admin/kota/' + e,{
                 headers:{
                     authorization: 'Bearer ' + user.accessToken,
                 }
