@@ -18,7 +18,7 @@ export default function Homepage() {
     const startbatch = async (e) => {
         e.preventDefault();
         try {
-            await axios.delete('https://asia-southeast2-traffix-cloud.cloudfunctions.net/batch-start-monitoring/start')
+            await axios.get('https://asia-southeast2-traffix-cloud.cloudfunctions.net/batch-start-monitoring/start')
             toast.success("Sukses Menjalankan Monitoring", {
                 position: "top-right",
                 autoClose: 2000,
