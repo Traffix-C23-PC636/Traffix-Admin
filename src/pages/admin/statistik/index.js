@@ -1,4 +1,4 @@
-import {useEffect, Fragment, useContext} from "react";
+import {useEffect, useContext} from "react";
 import {
     Card,
     Title,
@@ -8,12 +8,10 @@ import {
     TableRow,
     TableHeaderCell,
     TableBody,
-    TableCell,
-    TextInput, Select, SelectItem
+    TableCell
 } from '@tremor/react';
 import {useState} from "react";
 import axios from "axios";
-import { Dialog,Transition } from '@headlessui/react'
 import Layout from "@/components/Layout";
 import Head from "next/head";
 import {toast} from "react-toastify";
@@ -62,8 +60,8 @@ function Page() {
 
     const deleteData = async (e) => {
         try {
-            await axios.delete('https://traffix-prod-jiiwmdjwva-as.a.run.app//api/admin/statistik/' + e,{
-                headers:{
+            await axios.delete('https://traffix-prod-jiiwmdjwva-as.a.run.app//api/admin/statistik/' + e, {
+                headers: {
                     authorization: 'Bearer ' + user.accessToken,
                 }
             })
@@ -84,14 +82,6 @@ function Page() {
         }
     }
 
-    function closeModal() {
-        setIsOpen(false)
-    }
-
-    function openModal() {
-        setIsOpen(true)
-    }
-
 
 
     return (
@@ -105,7 +95,6 @@ function Page() {
                         <Card>
                             <div className={'flex flex-row justify-between'}>
                                 <Title>Data Statistik</Title>
-                                <button onClick={e=>{setIsOpen(true)}} className={'p-3 text-white rounded bg-blue-600'}>Tambah Data</button>
                             </div>
                             <br/>
                             <Table className="mt-5">

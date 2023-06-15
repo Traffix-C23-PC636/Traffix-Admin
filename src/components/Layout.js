@@ -16,7 +16,7 @@ const Layout = ({ children }) => {
         } else {
             setIsLoading(false)
         }
-    },[])
+    },[router, user])
 
     return (
         (!isLoading) ?

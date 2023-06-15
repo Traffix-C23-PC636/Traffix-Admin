@@ -36,13 +36,16 @@ export default function Navbar() {
             </div>
             <div className="flex items-center space-x-4">
                 <Link href="/admin">
-                    <p className="text-gray-800 hover:text-gray-600 cursor-pointer">Data Kota</p>
+                    <p className="text-gray-800 hover:text-gray-600 cursor-pointer">Home</p>
+                </Link>
+                <Link href="/admin/kota">
+                    <p className="text-gray-800 hover:text-gray-600 cursor-pointer">Kota</p>
                 </Link>
                 <Link href="/admin/atcs">
-                    <p className="text-gray-800 hover:text-gray-600 cursor-pointer">Data ATCS</p>
+                    <p className="text-gray-800 hover:text-gray-600 cursor-pointer">ATCS</p>
                 </Link>
                 <Link href="/admin/statistik">
-                    <p className="text-gray-800 hover:text-gray-600 cursor-pointer">Data Statistik</p>
+                    <p className="text-gray-800 hover:text-gray-600 cursor-pointer">Statistik</p>
                 </Link>
                 <div className={`bg-red-600 text-white rounded px-3 py-2 cursor-pointer`} onClick={signOutHandler}>
                     <p className="cursor-pointer">Log Out</p>
